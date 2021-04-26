@@ -1,1 +1,1 @@
-# Baseline models for the NTIRE 2021 Challenge on Video Enhancement
+# Baseline models for NTIRE 2021 Video Enhancement Challenge

@@ -21,7 +21,7 @@ ffmpeg -i path_to_raw/003.mkv ./003_raw/%3d.png
 
 ## Single-frame baseline models (SingleFrame.py)
 
-The single-frame baseline models include ARCNN, DnCNN and QE-CNN. The arguments include:
+The single-frame baseline models include [ARCNN](http://mmlab.ie.cuhk.edu.hk/projects/ARCNN.html), [DnCNN](https://arxiv.org/abs/1608.03981) and [QE-CNN](https://ieeexplore.ieee.org/abstract/document/8450025). The arguments include:
 
 ```
 parser.add_argument("--model", type=str, default='QECNN', choices=['ARCNN', 'DnCNN', 'QECNN']) # choose the model
@@ -41,7 +41,7 @@ python SingleFrame.py --model QECNN --raw_path ./003_raw --com_path ./003 --enh_
 
 ## Multi-frame baseline models (MFQE.py)
 
-Currently, the multi-frame baseline model includes MFQE. The arguments include:
+Currently, the multi-frame baseline model includes [MFQE](https://openaccess.thecvf.com/content_cvpr_2018/html/Yang_Multi-Frame_Quality_Enhancement_CVPR_2018_paper.html). The arguments include:
 
 ```
 parser.add_argument("--raw_path", type=str, default='./003_raw') # path to raw frames

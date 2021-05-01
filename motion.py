@@ -1,7 +1,6 @@
 import tensorflow.compat.v1 as tf
 import tensorflow.contrib as tfcon
 import numpy as np
-# import warp
 
 def convnet(im1_warp, im2, flow, layer):
 
@@ -59,86 +58,3 @@ def optical_flow(im1_4, im2_4, batch, h, w):
     return flow_4, loss_0, loss_1, loss_2, loss_3, loss_4
 
 
-def gaussian_kernel(size=3, sigma=1):
-
-    x_points = np.arange(-(size - 1) // 2, (size - 1) // 2 + 1, 1)
-    y_points = x_points[::-1]
-    xs, ys = np.meshgrid(x_points, y_points)
-    kernel = np.exp(-(xs ** 2 + ys ** 2) / (2 * sigma ** 2)) / (2 * np.pi * sigma ** 2)
-    return kernel / kernel.sum()
-
-def tf_inverse_flow(flow_input, b, h, w):
-
-    # x = vertical (channel 0 in flow), y = horizontal (channel 1 in flow)
-    flow_list = tf.unstack(flow_input)
-
-    x_init, y_init = tf.meshgrid(tf.range(h), tf.range(w), indexing='ij')
-
-    x_init = tf.expand_dims(x_init, -1)
-    y_init = tf.expand_dims(y_init, -1)
-
-    grid_init = tf.cast(tf.concat([x_init, y_init], axis=-1), tf.float32)
-
-    for r in range(b):
-
-        flow = flow_list[r]
-        grid = grid_init + flow
-
-
-
-        x, y = tf.split(grid, [1, 1], axis=-1)
-        x = tf.clip_by_value(x, 0, h - 1)
-        y = tf.clip_by_value(y, 0, w - 1)
-
-        x_1 = tf.math.floor(x)
-        x_2 = tf.math.ceil(x)
-        y_1 = tf.math.floor(y)
-        y_2 = tf.math.ceil(y)
-
-        # x_3 = tf.round(x)
-        # y_3 = tf.round(y)
-
-        grid_1 = tf.cast(tf.concat([x_1, y_1], axis=-1), tf.int32)
-        grid_2 = tf.cast(tf.concat([x_1, y_2], axis=-1), tf.int32)
-        grid_3 = tf.cast(tf.concat([x_2, y_1], axis=-1), tf.int32)
-        grid_4 = tf.cast(tf.concat([x_2, y_2], axis=-1), tf.int32)
-
-
-        tf_zeros = tf.zeros([h, w, 1, 1], tf.int32)
-        indices_1 = tf.concat([tf.expand_dims(grid_1, 2), tf_zeros], axis=-1)
-        indices_2 = tf.concat([tf.expand_dims(grid_2, 2), tf_zeros], axis=-1)
-        indices_3 = tf.concat([tf.expand_dims(grid_3, 2), tf_zeros], axis=-1)
-        indices_4 = tf.concat([tf.expand_dims(grid_4, 2), tf_zeros], axis=-1)
-
-
-        flow_x, flow_y = tf.split(flow, [1, 1], axis=-1)
-
-        ref_x = tf.zeros([h, w, 1], tf.float32)
-        ref_y = tf.zeros([h, w, 1], tf.float32)
-
-        inv_flow_x = tf.tensor_scatter_update(ref_x, indices_1, -flow_x)
-        inv_flow_y = tf.tensor_scatter_update(ref_y, indices_1, -flow_y)
-
-        inv_flow_x = tf.tensor_scatter_update(inv_flow_x, indices_2, -flow_x)
-        inv_flow_y = tf.tensor_scatter_update(inv_flow_y, indices_2, -flow_y)
-
-        inv_flow_x = tf.tensor_scatter_update(inv_flow_x, indices_3, -flow_x)
-        inv_flow_y = tf.tensor_scatter_update(inv_flow_y, indices_3, -flow_y)
-
-        inv_flow_x = tf.tensor_scatter_update(inv_flow_x, indices_4, -flow_x)
-        inv_flow_y = tf.tensor_scatter_update(inv_flow_y, indices_4, -flow_y)
-
-        kernel = gaussian_kernel(size=5, sigma=3)
-        kernel = kernel[:, :, np.newaxis, np.newaxis]
-
-        inv_flow_x = tf.nn.conv2d(tf.expand_dims(inv_flow_x, 0), kernel, strides=[1, 1, 1, 1], padding='SAME')
-        inv_flow_y = tf.nn.conv2d(tf.expand_dims(inv_flow_y, 0), kernel, strides=[1, 1, 1, 1], padding='SAME')
-
-        inv_flow_batch = tf.concat([inv_flow_x, inv_flow_y], axis=-1)
-
-        if r == 0:
-            inv_flow = inv_flow_batch
-        else:
-            inv_flow = tf.concat([inv_flow, inv_flow_batch], axis=0)
-
-    return inv_flow

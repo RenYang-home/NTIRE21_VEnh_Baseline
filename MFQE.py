@@ -22,7 +22,7 @@ parser = argparse.ArgumentParser(
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--raw_path", type=str, default='./003_raw') # path to raw frames
 parser.add_argument("--com_path", type=str, default='./003') # path to compressed frames
-parser.add_argument("--pqf_path", type=str, default='./003_qecnn') # path to save enhanced frames
+parser.add_argument("--pqf_path", type=str, default='./003_qecnn') # path to enhanced PQFs
 parser.add_argument("--enh_path", type=str, default='./003_enh') # path to save enhanced frames
 parser.add_argument("--frame_num", type=int, default=250)
 parser.add_argument("--H", type=int, default=536)

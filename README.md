@@ -19,7 +19,7 @@ ffmpeg -i path_to_compressed/003.mkv ./003/%3d.png
 ffmpeg -i path_to_raw/003.mkv ./003_raw/%3d.png
 ```
 
-## Single-frame baseline models
+## Single-frame baseline models (SingleFrame.py)
 
 The single-frame baseline models include ARCNN, DnCNN and QE-CNN. The arguments include:
 
@@ -38,3 +38,23 @@ For example,
 ```
 python SingleFrame.py --model QECNN --raw_path ./003_raw --com_path ./003 --enh_path ./003_enh --frame_num 250 --H 536 --W 960
 ```
+
+## Multi-frame baseline models (MFQE.py)
+
+Currently, the multi-frame baseline model includes MFQE. The arguments include:
+
+parser.add_argument("--raw_path", type=str, default='./003_raw') # path to raw frames
+parser.add_argument("--com_path", type=str, default='./003') # path to compressed frames
+parser.add_argument("--pqf_path", type=str, default='./003_qecnn') # path to enhanced PQFs
+parser.add_argument("--enh_path", type=str, default='./003_enh') # path to save enhanced frames
+parser.add_argument("--frame_num", type=int, default=250) # frame number
+parser.add_argument("--H", type=int, default=536) # Height
+parser.add_argument("--W", type=int, default=960) # Width
+
+Since PQFs are enhanced by QE-CNN, please first run QR-CNN and then run MFQE. For example,
+
+```
+python SingleFrame.py --model QECNN --raw_path ./003_raw --com_path ./003 --enh_path ./003_qecnn --frame_num 250 --H 536 --W 960
+python MFQE.py --raw_path ./003_raw --com_path ./003 --pqf_path ./003_qecnn --enh_path ./003_qecnn --frame_num 250 --H 536 --W 960
+```
+

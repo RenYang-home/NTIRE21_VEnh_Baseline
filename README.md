@@ -8,7 +8,7 @@ TensorFlow 1.15
 
 TFLearn
 
-Pre-trained models (https://data.vision.ee.ethz.ch/reyang/model/model.zip)
+Pre-trained models ([Download](https://data.vision.ee.ethz.ch/reyang/model/model.zip) and unzip to the root path)
 
 ## Preparation
 

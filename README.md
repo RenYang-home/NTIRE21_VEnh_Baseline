@@ -5,7 +5,10 @@ The codes and pre-trained models of the baseline methods for the [NTIRE 2021 Vid
 ## Dependency
 
 TensorFlow 1.15
+
 TFLearn
+
+Pre-trained models (https://data.vision.ee.ethz.ch/reyang/model/model.zip)
 
 ## Preparation
 

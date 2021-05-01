@@ -43,6 +43,7 @@ python SingleFrame.py --model QECNN --raw_path ./003_raw --com_path ./003 --enh_
 
 Currently, the multi-frame baseline model includes MFQE. The arguments include:
 
+```
 parser.add_argument("--raw_path", type=str, default='./003_raw') # path to raw frames
 parser.add_argument("--com_path", type=str, default='./003') # path to compressed frames
 parser.add_argument("--pqf_path", type=str, default='./003_qecnn') # path to enhanced PQFs
@@ -50,6 +51,7 @@ parser.add_argument("--enh_path", type=str, default='./003_enh') # path to save 
 parser.add_argument("--frame_num", type=int, default=250) # frame number
 parser.add_argument("--H", type=int, default=536) # Height
 parser.add_argument("--W", type=int, default=960) # Width
+```
 
 Since PQFs are enhanced by QE-CNN, please first run QR-CNN and then run MFQE. For example,
 

@@ -73,6 +73,9 @@ pqf_l_frame = imageio.imread(args.com_path + '/' + str(g * 4 + 1).zfill(3) + '.p
 pdf_enh_l = imageio.imread(args.pqf_path + '/' + str(g * 4 + 1).zfill(3) + '.png')
 pdf_raw_l = imageio.imread(args.raw_path + '/' + str(g * 4 + 1).zfill(3) + '.png')
 
+os.system('cp ' + args.pqf_path + '/' + str(g * 4 + 1).zfill(3) + '.png'
+          + ' ' + args.com_path + '/' + str(g * 4 + 1).zfill(3) + '.png')
+
 PSNR_org[g * 4] = cal_psnr(pqf_l_frame / 255.0, pdf_raw_l / 255.0)
 PSNR_enh[g * 4] = cal_psnr(pdf_enh_l / 255.0, pdf_raw_l / 255.0)
 
@@ -97,6 +100,9 @@ for g in range(gop):
 
         print('Frame:', g * 4 + 2 + d, 'Original PSNR:', PSNR_org[g * 4 + 1 + d], 'Enhanced PSNR:', PSNR_enh[g * 4 + 1 + d])
 
+    os.system('cp ' + args.pqf_path + '/' + str((g + 1) * 4).zfill(3) + '.png'
+              + ' ' + args.com_path + '/' + str((g + 1) * 4).zfill(3) + '.png')
+
     PSNR_org[(g + 1) * 4] = cal_psnr(pqf_r_frame / 255.0, pdf_raw_r / 255.0)
     PSNR_enh[(g + 1) * 4] = cal_psnr(pdf_enh_r / 255.0, pdf_raw_r / 255.0)
 
@@ -110,10 +116,15 @@ if args.frame_num > gop * 4 + 1:
         raw_frame = imageio.imread(args.raw_path + '/' + str(f + 1).zfill(3) + '.png')
         enha_frame = imageio.imread(args.pqf_path + '/' + str(f + 1).zfill(3) + '.png')
 
+        os.system('cp ' + args.pqf_path + '/' + str(f + 1).zfill(3) + '.png'
+                  + ' ' + args.com_path + '/' + str(f + 1).zfill(3) + '.png')
+
         PSNR_org[f] = cal_psnr(comp_frame / 255.0, raw_frame / 255.0)
         PSNR_enh[f] = cal_psnr(enha_frame / 255.0, raw_frame / 255.0)
 
         print('Frame:', f + 1, 'Original PSNR:', PSNR_org[f], 'Enhanced PSNR:', PSNR_enh[f])
+
+print('Average ', 'Original PSNR:', np.mean(PSNR_org), 'Enhanced PSNR:', np.mean(PSNR_enh))
 
 
 
